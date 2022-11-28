@@ -1,21 +1,35 @@
-import { useEffect } from 'react';
-import { getPosts } from '../api/index';
+import { useEffect, useState } from 'react';
+
+import { getPosts } from '../api';
+import { Home } from '../pages';
+import { Loader } from './';
 
 function App() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // this will fetch the data from the API call
   const fetchPosts = async () => {
-    try {
-      return await getPosts();
-    } catch (error) {
-      console.log('Error in fetch 1', error);
+    const response = await getPosts();
+
+    if (response.success) {
+      setPosts(response.data.posts);
     }
+
+    setLoading(false);
   };
+  // set the data 
   useEffect(() => {
-    const postsData = fetchPosts();
-    console.log('response', postsData);
-  }, []);
+    fetchPosts();
+  }, [posts]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="App">
-      <h1>Hello world</h1>
+      <Home posts={posts} />
     </div>
   );
 }
