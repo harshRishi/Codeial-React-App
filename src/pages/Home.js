@@ -1,11 +1,14 @@
+import PropsTypes from 'prop-types'; // this lib just chech which type of prop is been passed
 import styles from '../styles/home.module.css';
+import PostComment from '../components/comments';
 
 const Home = ({ posts }) => {
+  console.log(posts);
   return (
     <div className={styles.postsList}>
-    {/* mapping the array of post which we have recieve as props */}
+      {/* mapping the array of post which we have recieve as props so we also need key and we have passed that as post._id*/}
       {posts.map((post) => (
-        <div className={styles.postWrapper}>
+        <div className={styles.postWrapper} key={`post-${post._id}`}>
           <div className={styles.postHeader}>
             <div className={styles.postAvatar}>
               <img
@@ -39,23 +42,21 @@ const Home = ({ posts }) => {
             <div className={styles.postCommentBox}>
               <input placeholder="Start typing a comment" />
             </div>
-
             <div className={styles.postCommentsList}>
-              <div className={styles.postCommentsItem}>
-                <div className={styles.postCommentHeader}>
-                  <span className={styles.postCommentAuthor}>Bill</span>
-                  <span className={styles.postCommentTime}>a minute ago</span>
-                  <span className={styles.postCommentLikes}>22</span>
-                </div>
-
-                <div className={styles.postCommentContent}>Random comment</div>
-              </div>
+              {post.comments.map((comment) => {
+                return <PostComment key={post._id} comment={comment} />;
+              })}
             </div>
           </div>
         </div>
       ))}
     </div>
   );
+};
+
+// this will check if the props is array or not
+Home.propTypes = {
+  posts: PropsTypes.array.isRequired,
 };
 
 export default Home;
