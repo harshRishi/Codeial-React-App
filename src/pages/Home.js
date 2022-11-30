@@ -3,7 +3,7 @@ import styles from '../styles/home.module.css';
 import PostComment from '../components/comments';
 
 const Home = ({ posts }) => {
-  console.log(posts);
+  // console.log(posts);
   return (
     <div className={styles.postsList}>
       {/* mapping the array of post which we have recieve as props so we also need key and we have passed that as post._id*/}
