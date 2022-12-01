@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { getPosts } from '../api';
 import { Loader } from '../components';
-import PropsTypes from 'prop-types'; // this lib just chech which type of prop is been passed
+// import PropsTypes from 'prop-types'; // this lib just chech which type of prop is been passed
 import styles from '../styles/home.module.css';
 import Comment from '../components/comments';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-
   // this will fetch the data from the API call
   const fetchPosts = async () => {
     const response = await getPosts();
@@ -24,11 +23,11 @@ const Home = () => {
     fetchPosts();
   }, []);
 
+  // While fetching the data
   if (loading) {
     return <Loader />;
   }
 
-  // console.log(posts);
   return (
     <div className={styles.postsList}>
       {/* mapping the array of post which we have recieve as props so we also need key and we have passed that as post._id*/}
@@ -79,9 +78,9 @@ const Home = () => {
   );
 };
 
-// this will check if the props is array or not
-Home.propTypes = {
-  posts: PropsTypes.array.isRequired,
-};
+// // this will check if the props is array or not
+// Home.propTypes = {
+//   posts: PropsTypes.array.isRequired,
+// };
 
 export default Home;
