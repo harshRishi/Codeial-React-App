@@ -2,18 +2,21 @@ import styles from '../styles/login.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
-import { login } from '../api/index';
+// import { login } from '../api';
+import { useAuth } from '../hooks'; // our custom hook
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
+  const auth = useAuth();
+  // console.log(auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoggingIn(true);
 
-    const response = await login(email, password);
+    const response = await auth.login(email, password);
     if (response.success) {
       toast.success('Successfully Logged In');
     } else {

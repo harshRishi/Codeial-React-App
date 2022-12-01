@@ -1,8 +1,33 @@
+import { useEffect, useState } from 'react';
+import { getPosts } from '../api';
+import { Loader } from '../components';
 import PropsTypes from 'prop-types'; // this lib just chech which type of prop is been passed
 import styles from '../styles/home.module.css';
-import PostComment from '../components/comments';
+import Comment from '../components/comments';
 
-const Home = ({ posts }) => {
+const Home = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // this will fetch the data from the API call
+  const fetchPosts = async () => {
+    const response = await getPosts();
+
+    if (response.success) {
+      setPosts(response.data.posts);
+    }
+
+    setLoading(false);
+  };
+  // set the data
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+
   // console.log(posts);
   return (
     <div className={styles.postsList}>
@@ -43,9 +68,9 @@ const Home = ({ posts }) => {
               <input placeholder="Start typing a comment" />
             </div>
             <div className={styles.postCommentsList}>
-              {post.comments.map((comment) => {
-                return <PostComment key={post._id} comment={comment} />;
-              })}
+              {post.comments.map((comment) => (
+                <Comment key={post._id} comment={comment} />
+              ))}
             </div>
           </div>
         </div>

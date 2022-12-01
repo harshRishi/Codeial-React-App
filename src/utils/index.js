@@ -1,25 +1,39 @@
-const API_ROOT = 'https://codeial.codingninjas.com:8000/api/v2/';
+export * from './constants';
 
-// doc url - https://www.notion.so/aakashcn/Codeial-API-docs-3a4d0b5a42c54f0a94d951a42aabc13f
-export const API_URLS = {
-  login: () => `${API_ROOT}/users/login`,
-  signup: () => `${API_ROOT}/users/signup`,
-  posts: (page, limit) => `${API_ROOT}/posts?page=${page}&limit=${limit}`,
-  createPost: (content) => `${API_ROOT}/posts/create`,
-  createFriendship: (userId) =>
-    `${API_ROOT}/friendship/create_friendship?user_id=${userId}`,
-  friends: () => `${API_ROOT}/friendship/fetch_user_friends`,
-  removeFriend: (userId) =>
-    `${API_ROOT}/friendship/remove_friendship?user_id=${userId}`,
-  toggleLike: (itemId, itemType) =>
-    `${API_ROOT}/likes/toggle?likeable_id=${itemId}&likeable_type=${itemType}`, // itemType is 'Post'/'Comment'
-  getLikes: (itemId, itemType) =>
-    `${API_ROOT}/likes?likeable_id=${itemId}&likeable_type=${itemType}`,
-  comment: () => `${API_ROOT}/comments`, // POST - create, GET - list of comments
-  deleteComment: (commentId) => `${API_ROOT}/comments?comment_id=${commentId}`,
-  editUser: () => `${API_ROOT}/users/edit`,
-  userInfo: (userId) => `${API_ROOT}/users/${userId}`,
-  searchUsers: (searchText) => `${API_ROOT}/users/search?text=${searchText}`,
+// Incase of page refresh our app will reset the user to null so we need check for token and decode the user information and set the user back again
+export const setItemInLocalStorage = (key, value) => {
+  if (!key || !value) {
+    return console.error('Can not store in localStorage');
+  }
+  const valueToStore =
+    typeof value !== 'string' ? JSON.stringify(value) : value;
+
+  localStorage.setItem(key, valueToStore);
+};
+export const getItemInLocalStorage = (key) => {
+  if (!key) {
+    return console.error('Can not get the value from localStorage');
+  }
+  return localStorage.getItem(key);
+};
+export const removeItemInLocalStorage = (key) => {
+  if (!key) {
+    return console.error('Can not find the value againest this key');
+  }
+  localStorage.removeItem(key);
 };
 
-export const LOCALSTORAGE_TOKEN_KEY = '__MY_NAME_IS_CODIEAL_TOKEN__'
+// params will be an object {username: harsh, password: 123123}
+export const getFormBody = (params) => {
+  let formBody = [];
+
+  // body is arr of user and password
+  for (let property in params) {
+    // javascript method
+    let encodedKey = encodeURIComponent(property); // 'user name' => 'user%20name'
+    let encodedValue = encodeURIComponent(params[property]); // harsh 123 => harsh%2020123
+
+    formBody.push(encodedKey + '=' + encodedValue); // concatenate
+  }
+  return formBody.join('&'); // 'username=harsh&password=123123'
+};
