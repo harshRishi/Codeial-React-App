@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import { useAuth } from '../hooks';
 
 // import { getPosts } from '../api';
-import { Home, Login } from '../pages';
+import { Home, Login, Signup } from '../pages';
 import { Loader, Navbar } from './';
 
 // dummy component
@@ -22,6 +22,7 @@ function App() {
         {/*New version of switch*/}
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/register" element={<Signup />} />
         {/* Incase no route matches render the below route */}
         <Route path="*" element={<Page404 />} />
       </Routes>
