@@ -20,7 +20,7 @@ const Navbar = () => {
         {/* Show user only when logged In */}
         {auth.user && (
           <div className={styles.user}>
-            <Link to="/user/:userId">
+            <Link to="/settings">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/9042/9042167.png"
                 alt=""

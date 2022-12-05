@@ -4,13 +4,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 // import { login } from '../api';
 import { useAuth } from '../hooks'; // our custom hook
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
   const auth = useAuth();
-  // console.log(auth);
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +20,7 @@ const Login = () => {
     const response = await auth.login(email, password);
     if (response.success) {
       toast.success('Successfully Logged In');
+      navigate('/');
     } else {
       toast.error(response.message);
     }

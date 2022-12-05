@@ -12,7 +12,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [signingUp, setSigningUp] = useState('');
   const auth = useAuth();
-  const navigate = useNavigate(); // used to navigate urls 
+  const navigate = useNavigate(); // used to navigate urls
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -71,7 +71,7 @@ const Signup = () => {
       </div>
       <div className={styles.field}>
         <input
-          placeholder="Confirm password"
+          placeholder="Password"
           type="password"
           required
           value={password}
@@ -80,7 +80,7 @@ const Signup = () => {
       </div>
       <div className={styles.field}>
         <input
-          placeholder="Password"
+          placeholder="Confirm Password"
           type="password"
           required
           value={confirmPassword}
@@ -104,7 +104,6 @@ const Signup = () => {
         pauseOnHover
         theme="colored"
       />
-      ;
     </form>
   );
 };

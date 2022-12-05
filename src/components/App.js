@@ -1,8 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { useAuth } from '../hooks';
-
 // import { getPosts } from '../api';
-import { Home, Login, Signup } from '../pages';
+import { Home, Login, Signup, Settings } from '../pages';
 import { Loader, Navbar } from './';
 
 // dummy component
@@ -23,6 +22,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/register" element={<Signup />} />
+        <Route path="/settings" element={<Settings />} />
         {/* Incase no route matches render the below route */}
         <Route path="*" element={<Page404 />} />
       </Routes>
