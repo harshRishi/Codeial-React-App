@@ -1,7 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../providers/AuthProvider';
-import { editProfile, login as userLogin, register } from '../api';
 import jwt from 'jwt-decode';
+
+import { AuthContext } from '../providers/AuthProvider';
+import {
+  editProfile,
+  fetchUserFriends,
+  login as userLogin,
+  register,
+} from '../api';
 import {
   setItemInLocalStorage,
   LOCALSTORAGE_TOKEN_KEY,
@@ -20,17 +26,28 @@ export const useProvideAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userToken = getItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY);
-    if (userToken) {
-      const user = jwt(userToken);
-      setUser(user);
-    }
-    setLoading(false);
+    const getUserDetails = async () => {
+      const userToken = getItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY);
+      if (userToken) {
+        const user = jwt(userToken);
+        // not only the user info but we also want friends of that user
+        const response = await fetchUserFriends();
+        let friends = [];
+        if (response.success) {
+          friends = response.data.friends;
+        }
+        setUser({
+          ...user,
+          friends,
+        });
+      }
+      setLoading(false);
+    };
+    getUserDetails();
   }, []);
-  //
+
   const updateUser = async (userId, name, password, confirmPassword) => {
     const response = await editProfile(userId, name, password, confirmPassword);
-    console.log('Response : ', response);
     if (response.success) {
       setUser(response.data.user);
       // first delete the old token
@@ -92,6 +109,29 @@ export const useProvideAuth = () => {
     setUser(null);
     removeItemInLocalStorage(LOCALSTORAGE_TOKEN_KEY);
   };
+
+  // function to show updated user friends' list
+  const updateUserFriends = (addFriend, friend) => {
+    // all user data with prev friends list and the new friend added to it
+    if (addFriend) {
+      setUser({
+        ...user,
+        friends: [...user.friends, friend],
+      });
+      return;
+    }
+    // In case false we we'll implement the Unfriend logic
+    // That friend from the friend's array
+    const newFriends = user.friends.filter(
+      (f) => f.to_user._id !== friend.to_user._id
+    );
+
+    setUser({
+      ...user,
+      friends: newFriends,
+    });
+  };
+
   return {
     user,
     login,
@@ -99,5 +139,6 @@ export const useProvideAuth = () => {
     loading,
     signup,
     updateUser,
+    updateUserFriends,
   };
 };

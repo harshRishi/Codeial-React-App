@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import { useAuth } from '../hooks'; // our custom hook
+import { Navigate } from 'react-router-dom';
 // import { Navigate } from 'react-router-dom';
 
 const Login = () => {
@@ -11,22 +12,27 @@ const Login = () => {
   const [loggingIn, setLoggingIn] = useState(false);
   const auth = useAuth();
 
-  // if (auth.user) {
-  //   return <Navigate to="/Login" />;
-  // }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoggingIn(true);
 
+    if (!email || !password) {
+      return toast.error('Please enter both email and password');
+    }
+
     const response = await auth.login(email, password);
     if (response.success) {
       toast.success('Successfully Logged In');
+      // return <Navigate to="/" />;
     } else {
       toast.error(response.message);
     }
     setLoggingIn(false);
   };
+
+  if (auth.user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>

@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import { useAuth } from '../hooks';
-import { useNavigate } from 'react-router-dom'; // useHistory is replaced with this effect
+import { Navigate, useNavigate } from 'react-router-dom'; // useHistory is replaced with this effect
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -46,6 +46,10 @@ const Signup = () => {
     }
     setSigningUp(false);
   };
+
+  if (auth.user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <form className={styles.loginForm} onSubmit={handleFormSubmit}>

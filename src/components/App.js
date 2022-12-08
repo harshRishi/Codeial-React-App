@@ -1,7 +1,7 @@
 import { Route, Routes, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks';
 // import { getPosts } from '../api';
-import { Home, Login, Signup, Settings } from '../pages';
+import { Home, Login, Signup, Settings, UserProfile } from '../pages';
 import { Loader, Navbar } from './';
 
 // making private route
@@ -25,6 +25,7 @@ const Page404 = () => {
 
 function App() {
   const auth = useAuth();
+  // console.log('auth', auth);
   if (auth.loading) {
     return <Loader />;
   }
@@ -32,14 +33,20 @@ function App() {
     <div className="App">
       <Navbar />
       <Routes>
-        {/*New version of switch*/}
+        {/*New version of switch is Route*/}
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/register" element={<Signup />} />
+
+        {/* Private routes  */}
         <Route element={<PrivateRoute />}>
           <Route path="/settings" element=<Settings /> />
         </Route>
-        {/* Incase no route matches render the below route */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/user/:userId" element=<UserProfile /> />
+        </Route>
+
+        {/* Global Route */}
         <Route path="*" element={<Page404 />} />
       </Routes>
     </div>
