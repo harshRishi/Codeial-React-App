@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import styles from '../styles/home.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import styles from '../styles/home.module.css';
 import { addPost } from '../api';
+import { usePosts } from '../hooks';
 
 const CreatePost = () => {
   const [post, setPost] = useState('');
   const [addingPost, setAddingPost] = useState(false);
+  const posts = usePosts();
 
   const handleAddPostClick = async () => {
     setAddingPost(true);
@@ -14,6 +17,8 @@ const CreatePost = () => {
     const response = await addPost(post);
     if(response.success) {
         setPost('');
+        // add the real time changes with new response of the data after fetch
+        posts.addPostToState(response.data.post);
         toast.success("Post created");
     } else {
         toast.error(response.message);

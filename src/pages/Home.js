@@ -1,33 +1,15 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import { getPosts } from '../api';
 import { Comment, Loader, FriendsList, CreatePost } from '../components';
-import { useAuth } from '../hooks';
+import { useAuth, usePosts } from '../hooks';
 // import PropsTypes from 'prop-types'; // this lib just chech which type of prop is been passed
 import styles from '../styles/home.module.css';
 
 const Home = () => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const auth = useAuth();
-  // this will fetch the data from the API call
-  const fetchPosts = async () => {
-    const response = await getPosts();
-
-    if (response.success) {
-      setPosts(response.data.posts);
-    }
-
-    setLoading(false);
-  };
-  // set the data
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  const posts = usePosts();
 
   // While fetching the data
-  if (loading) {
+  if (posts.loading) {
     return <Loader />;
   }
 
@@ -36,7 +18,7 @@ const Home = () => {
       <div className={styles.postsList}>
         {auth.user && <CreatePost />}
         {/* mapping the array of post which we have recieve as props so we also need key and we have passed that as post._id*/}
-        {posts.map((post) => (
+        {posts.data.map((post) => (
           <div className={styles.postWrapper} key={`post-${post._id}`}>
             <div className={styles.postHeader}>
               <div className={styles.postAvatar}>
