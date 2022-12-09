@@ -1,20 +1,27 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { createComment } from '../api';
-import { usePosts } from '../hooks';
+import { createComment, toggleLike } from '../api';
+import { useAuth, usePosts } from '../hooks';
 import styles from '../styles/home.module.css';
 import { Comment } from './';
 
 const Post = ({ post }) => {
   const [comment, setComment] = useState('');
   const [creatingComment, setCreatingComment] = useState(false);
-  const posts = usePosts();
+  console.log(creatingComment);
+  const posts = usePosts(),
+    auth = useAuth();
+  const Navigate = useNavigate();
 
   const handleAddComment = async (e) => {
+    if (!auth.user) {
+      Navigate('/Login');
+      return;
+    }
     if (e.key === 'Enter') {
       setCreatingComment(true);
 
@@ -30,6 +37,22 @@ const Post = ({ post }) => {
         toast.error(response.message);
       }
       setCreatingComment(false);
+    }
+  };
+
+  const handlePostLikeClick = async () => {
+    if (!auth.user) {
+      Navigate('/Login');
+      return;
+    }
+    const response = await toggleLike(post._id, 'Post');
+    if (response.success) {
+      if (response.data.deleted) {
+        toast.success('UnLiked');
+      }
+      toast.success('Liked');
+    } else {
+      toast.error(response.error);
     }
   };
 
@@ -62,10 +85,13 @@ const Post = ({ post }) => {
 
         <div className={styles.postActions}>
           <div className={styles.postLike}>
+            {/* <button> */}
             <img
+              onClick={handlePostLikeClick}
               src="https://cdn-icons-png.flaticon.com/512/3237/3237429.png"
               alt="likes-icon"
             />
+            {/* </button> */}
             <span>{post.likes.length}</span>
           </div>
 

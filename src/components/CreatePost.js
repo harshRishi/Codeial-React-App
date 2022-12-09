@@ -15,21 +15,21 @@ const CreatePost = () => {
     setAddingPost(true);
 
     const response = await addPost(post);
-    if(response.success) {
-        setPost('');
-        // add the real time changes with new response of the data after fetch
-        posts.addPostToState(response.data.post);
-        toast.success("Post created");
+    if (response.success) {
+      setPost('');
+      // add the real time changes with new response of the data after fetch
+      posts.addPostToState(response.data.post);
+      toast.success('Post created');
     } else {
-        toast.error(response.message);
+      toast.error(response.message);
     }
     setAddingPost(false);
-
   };
 
   return (
     <div className={styles.createPost}>
       <textarea
+        placeholder="What on your mood..."
         className={styles.addPost}
         value={post}
         onChange={(e) => setPost(e.target.value)}
